@@ -1,0 +1,6 @@
+framework module SmartPay {
+  umbrella header "SmartPay.h"
+
+  export *
+  module * { export * }
+}

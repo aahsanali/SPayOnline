@@ -1,0 +1,206 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target x86_64-apple-ios11.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SmartPay
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import Foundation
+import KontoCloudSDKFramework
+@_exported import SmartPay
+import Swift
+import UIKit
+import WebKit
+import _Concurrency
+import _StringProcessing
+public protocol SmartPayContainerEventListener : AnyObject {
+  func smartPayFinished(withResult result: SmartPay.SmartPayResult)
+  func subscriptionFlowPaymentSelected(result: SmartPay.SmartPaySelectedSPOResult)
+  func smartPayPaymentOptionStored()
+  func smartPayPaymentFormCancelled()
+  func smartPayPrepareFragment(fragmentStep: SmartPay.SmartPayPaymentStep)
+  func smartPayReadyFragment(fragmentStep: SmartPay.SmartPayPaymentStep)
+}
+public protocol SmartPayClickPaymentMethod : AnyObject {
+  func smartPayClickCreateStoredPaymentMethod()
+  func smartPayClickStoredPaymentMethod()
+  func smartPayClickGuestPaymentMethod()
+}
+public protocol SmartPayMandateListener : AnyObject {
+  func smartPayMandateCancel()
+  func smartPayMandateAccept()
+}
+@_hasMissingDesignatedInitializers public class SmartPayCheckoutFragment {
+  weak public var containerEventListener: SmartPay.SmartPayContainerEventListener?
+  weak public var clickPaymentMethodListener: SmartPay.SmartPayClickPaymentMethod?
+  weak public var mandateListener: SmartPay.SmartPayMandateListener?
+  public func startFragment(step: SmartPay.SmartPayPaymentStep, inContainer containerView: UIKit.UIView, viewController: UIKit.UIViewController, transactionId: Swift.String, style: SmartPay.Style? = nil, configuration: SmartPay.SmartPayCheckoutConfiguration?, completion: (() -> Swift.Void)? = nil)
+  public func startFragment(step: SmartPay.SmartPayPaymentStep, inContainer containerView: UIKit.UIView, viewController: UIKit.UIViewController, subscriptionId: Swift.String, style: SmartPay.Style? = nil, configuration: SmartPay.SmartPayCheckoutConfiguration?, completion: (() -> Swift.Void)? = nil)
+  @discardableResult
+  public func continueManually(forStep step: SmartPay.SmartPayPaymentStep) -> SmartPay.SmartPayContinueManuallyResult
+  public func cancelSmartPayPayment()
+  public func setOnClickConfirmButton(forStep step: SmartPay.SmartPayPaymentStep, onClick closure: @escaping () -> Swift.Void)
+  public func setTextConfirmButton(title: Swift.String, forStep step: SmartPay.SmartPayPaymentStep)
+  public func setVisibilityConfirmButton(visibility: Swift.Bool, forStep step: SmartPay.SmartPayPaymentStep)
+  public func setOnBeforeDeleteStoredOption(closure: SmartPay.onBeforeDeleteConfirmationCompletion?)
+  @objc deinit
+}
+extension Foundation.URL {
+  public var queryParameters: [Swift.String : Swift.String]? {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) public class SmartPayPaymentView : UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func didMoveToWindow()
+  @_Concurrency.MainActor(unsafe) public func updateView(withUserStyle userStyle: SmartPay.PaymentViewStyle? = nil)
+  @objc deinit
+}
+public enum SmartPayPaymentResultType {
+  case success
+  case cancel
+  case error
+  public static func == (a: SmartPay.SmartPayPaymentResultType, b: SmartPay.SmartPayPaymentResultType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum TransactionState : Swift.String {
+  case captured
+  case error
+  case capturePending
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct SmartPayResult {
+  public var type: SmartPay.SmartPayPaymentResultType
+  public var transactionId: Swift.String
+  public var transactionState: Swift.String
+  public var message: Swift.String?
+}
+public class GlobalStyle {
+  public init(smartPayColorBackgroundFragment: UIKit.UIColor? = nil, smartPayColorNavigationBarBackground: UIKit.UIColor? = nil, smartPayColorNavigationBarText: UIKit.UIColor? = nil, smartPayStatusBarStyle: UIKit.UIBarStyle? = nil)
+  @objc deinit
+}
+@objc public class PaymentViewStyle : ObjectiveC.NSObject {
+  public init(paymentViewStylePrimaryTextColor: UIKit.UIColor? = nil, paymentViewStyleSecondaryTextColor: UIKit.UIColor? = nil, paymentViewStyleSizePrimaryText: Swift.Float? = nil, paymentViewStyleSizeSecondaryText: Swift.Float? = nil, paymentViewStyleBackgroundColor: UIKit.UIColor? = nil, paymentViewStyleBorderColor: UIKit.UIColor? = nil, paymentViewStyleBorderSize: Swift.Float? = nil, paymentViewStyleRadiusSize: Swift.Float? = nil)
+  @objc deinit
+}
+public class Style {
+  public init(globalStyle: SmartPay.GlobalStyle? = nil, confirmButtonStyle: SmartPay.ConfirmButtonStyle? = nil, paymentOptionStyle: SmartPay.PaymentOptionStyle? = nil, retryButtonStyle: SmartPay.RetryButtonStyle? = nil, paymentViewStyle: SmartPay.PaymentViewStyle? = nil)
+  @objc deinit
+}
+public struct SmartPaySelectedSPOResult {
+  public var subscriptionId: Swift.String
+  public var name: Swift.String
+  public var code: Swift.String
+  public var reference: Swift.String
+  public var expiryDate: Swift.String
+  public var carrierNumber: Swift.String
+}
+public protocol SmartPayCheckoutActivityDelegate : AnyObject {
+  func onActivityResult(result: SmartPay.SmartPayResult)
+  func subscriptionFlowPaymentSelected(result: SmartPay.SmartPaySelectedSPOResult)
+  func onActivityCancelled()
+}
+extension SmartPay.SmartPayCheckoutActivityDelegate {
+  public func subscriptionFlowPaymentSelected(result: SmartPay.SmartPaySelectedSPOResult)
+}
+@_hasMissingDesignatedInitializers public class SmartPayCheckoutActivity {
+  public var delegate: SmartPay.SmartPayCheckoutActivityDelegate?
+  public var animatedAppearance: Swift.Bool
+  public func startActivityForResult(viewController: UIKit.UIViewController, transactionId: Swift.String, style: SmartPay.Style? = nil, configuration: SmartPay.SmartPayCheckoutConfiguration?, completion: (() -> Swift.Void)? = nil)
+  public func startActivityForResult(viewController: UIKit.UIViewController, subscriptionId: Swift.String, style: SmartPay.Style? = nil, configuration: SmartPay.SmartPayCheckoutConfiguration?, completion: (() -> Swift.Void)? = nil)
+  @discardableResult
+  public func continueManually() -> SmartPay.SmartPayContinueManuallyResult
+  public func setOnClickConfirmButton(forStep step: SmartPay.SmartPayPaymentStep, onClick closure: @escaping () -> Swift.Void)
+  public func setTextConfirmButton(title: Swift.String, forStep step: SmartPay.SmartPayPaymentStep)
+  public func setVisibilityConfirmButton(visibility: Swift.Bool, forStep step: SmartPay.SmartPayPaymentStep)
+  public func presentCustomViewController(viewController: UIKit.UIViewController)
+  public func setOnBeforeDeleteStoredOption(closure: SmartPay.onBeforeDeleteConfirmationCompletion?)
+  @objc deinit
+}
+public typealias onBeforeDeleteConfirmationCompletion = ((_ completion: @escaping (Swift.Bool) -> Swift.Void) -> Swift.Void)
+public struct SmartPayCheckoutConfiguration {
+  public init(deleteStoredOptionEnabled: Swift.Bool? = nil, setDefaultStoredOptionEnabled: Swift.Bool? = nil, onBeforeDeleteStoredOption: SmartPay.onBeforeDeleteConfirmationCompletion? = nil)
+}
+@_hasMissingDesignatedInitializers public class LocalizationsProvider {
+  public static let shared: SmartPay.LocalizationsProvider
+  @objc deinit
+}
+@objc public class RetryButtonStyle : ObjectiveC.NSObject {
+  public init(smartPayRetryButtonBorder: UIKit.UIColor? = nil, smartPaySelectedRetryButtonBorder: UIKit.UIColor? = nil, smartPayRetryButtonBackground: UIKit.UIColor? = nil, smartPaySelectedRetryButtonBackground: UIKit.UIColor? = nil, smartPayRetryButtonSizeBorder: Swift.Float? = nil, smartPayRetryButtonSizeRadius: Swift.Float? = nil)
+  @objc deinit
+}
+@objc public class PaymentOptionStyle : ObjectiveC.NSObject {
+  public init(smartPayColorPrimaryTextColor: UIKit.UIColor? = nil, smartPayColorSecondaryTextColor: UIKit.UIColor? = nil, smartPayColorShowAll: UIKit.UIColor? = nil, smartPaySizePrimaryText: Swift.Float? = nil, smartPaySizeSecondaryText: Swift.Float? = nil, smartPayColorImageShowBackground: UIKit.UIColor? = nil, smartPayColorSelectedCardImageTint: UIKit.UIColor? = nil, smartPayColorCardBackground: UIKit.UIColor? = nil, smartPayColorSelectedCardBackground: UIKit.UIColor? = nil, smartPayColorCardBorder: UIKit.UIColor? = nil, smartPayColorSelectedCardBorder: UIKit.UIColor? = nil, smartPayColorCardRipple: UIKit.UIColor? = nil, smartPaySizeCardBorder: Swift.Float? = nil, smartPaySizeCardRadius: Swift.Float? = nil)
+  @objc deinit
+}
+@objc public class ConfirmButtonStyle : ObjectiveC.NSObject {
+  public init(smartPayColorButtonConfirm: UIKit.UIColor? = nil, smartPayColorButtonConfirmSelected: UIKit.UIColor? = nil, smartPayColorButtonConfirmRipple: UIKit.UIColor? = nil, smartPayColorButtonConfirmCorners: Swift.Float? = nil, smartPayColorButtonConfirmText: UIKit.UIColor? = nil, smartPayColorButtonConfirmSelectedText: UIKit.UIColor? = nil, smartPayColorButtonConfirmDeactivatedText: UIKit.UIColor? = nil, smartPayColorButtonConfirmDeactivated: UIKit.UIColor? = nil)
+  @objc deinit
+}
+public enum SmartPayEnvironment : Swift.Int, Swift.CaseIterable {
+  case DEV
+  case INT
+  case TEST
+  case LIVE
+  public func environmentUrl() -> Swift.String
+  public init?(rawValue: Swift.Int)
+  public typealias AllCases = [SmartPay.SmartPayEnvironment]
+  public typealias RawValue = Swift.Int
+  public static var allCases: [SmartPay.SmartPayEnvironment] {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct SmartPayOptions {
+  public var smartPayMode: SmartPay.SmartPayEnvironment
+  public init(smartPayMode: SmartPay.SmartPayEnvironment)
+}
+@_hasMissingDesignatedInitializers public class SmartPayProvider {
+  public static let shared: SmartPay.SmartPayProvider
+  public var smartPayOptions: SmartPay.SmartPayOptions
+  @objc deinit
+}
+extension SmartPay.SmartPayCheckoutActivity {
+  public class func getActivityInstance(delegate: SmartPay.SmartPayCheckoutActivityDelegate? = nil) -> SmartPay.SmartPayCheckoutActivity
+}
+extension SmartPay.SmartPayCheckoutFragment {
+  public class func getFragmentInstance(containerEventListener: SmartPay.SmartPayContainerEventListener? = nil, clickPaymentMethodListener: SmartPay.SmartPayClickPaymentMethod? = nil, mandateListener: SmartPay.SmartPayMandateListener? = nil) -> SmartPay.SmartPayCheckoutFragment
+}
+public enum SmartPayContinueManuallyResult {
+  case willFinishPayment
+  case willContinueToNextStep
+  case error
+  public static func == (a: SmartPay.SmartPayContinueManuallyResult, b: SmartPay.SmartPayContinueManuallyResult) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum SmartPayPaymentStep {
+  case optionsList
+  case form
+  public static func == (a: SmartPay.SmartPayPaymentStep, b: SmartPay.SmartPayPaymentStep) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension SmartPay.SmartPayPaymentResultType : Swift.Equatable {}
+extension SmartPay.SmartPayPaymentResultType : Swift.Hashable {}
+extension SmartPay.TransactionState : Swift.Equatable {}
+extension SmartPay.TransactionState : Swift.Hashable {}
+extension SmartPay.TransactionState : Swift.RawRepresentable {}
+extension SmartPay.SmartPayEnvironment : Swift.Equatable {}
+extension SmartPay.SmartPayEnvironment : Swift.Hashable {}
+extension SmartPay.SmartPayEnvironment : Swift.RawRepresentable {}
+extension SmartPay.SmartPayContinueManuallyResult : Swift.Equatable {}
+extension SmartPay.SmartPayContinueManuallyResult : Swift.Hashable {}
+extension SmartPay.SmartPayPaymentStep : Swift.Equatable {}
+extension SmartPay.SmartPayPaymentStep : Swift.Hashable {}
